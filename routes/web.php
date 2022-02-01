@@ -1,6 +1,9 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\{
+  AlbumController
+};
 
 /*
 |--------------------------------------------------------------------------
@@ -13,6 +16,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+
+// routes GET
 Route::get('/', function () {
     return view('welcome');
 });
@@ -21,4 +26,13 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
+
+// routes POST
+
+
+// routes resources
+Route::resource('albums', AlbumController::class);
+
+
+// import dossier des routes d'authentification
 require __DIR__.'/auth.php';
