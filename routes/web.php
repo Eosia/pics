@@ -19,9 +19,8 @@ use App\Http\Controllers\{
 
 // routes GET
 Route::get('/', function () {
-    return view('welcome');
+    return view('home.index')->with('title', config('app.name'));
 });
-
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');

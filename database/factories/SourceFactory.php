@@ -5,6 +5,7 @@ namespace Database\Factories;
 use App\Models\Photo;
 use App\Models\Source;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Str;
 
 class SourceFactory extends Factory
 {
