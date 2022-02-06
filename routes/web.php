@@ -2,7 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\{
-  AlbumController
+    AlbumController,
+    HomeController,
 };
 
 /*
@@ -18,9 +19,8 @@ use App\Http\Controllers\{
 
 
 // routes GET
-Route::get('/', function () {
-    return view('home.index')->with('title', config('app.name'));
-});
+Route::get('/', HomeController::class)->name('home');
+
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
