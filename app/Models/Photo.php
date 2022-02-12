@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
 use Spatie\Sluggable\HasSlug;
 use Spatie\Sluggable\SlugOptions;
 
@@ -12,6 +13,13 @@ class Photo extends Model
     use HasFactory, HasSlug;
 
     protected $perPage = 9;
+
+    protected static function booted()
+    {
+        static::addGlobalScope('active', function (Builder $builder) {
+            $builder->where('active', true);
+        });
+    }
 
     public function getRouteKeyName()
     {

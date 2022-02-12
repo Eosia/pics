@@ -21,9 +21,7 @@ class HomeController extends Controller
     {
 
         //ne prend que les photos actives
-        $photos = Photo::whereActive(true)
-            ->with('album.user')
-            ->orderByDesc('created_at')->paginate();
+        $photos = Photo::with('album.user')->orderByDesc('created_at')->paginate();
 
         $data = [
             'title'=>'Photos libres de droit - '.config('app.name'),
