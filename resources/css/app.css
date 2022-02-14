@@ -1,3 +1,16 @@
 @import 'tailwindcss/base';
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
+
+/*title h2 style*/
+.article-title h2 {
+    display: block;
+    width: 100%;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.article-image a img {
+    margin: 0 auto;
+}

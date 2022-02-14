@@ -28,12 +28,13 @@
 
                     @forelse($photos as $photo)
 
-
                     <div class="col-12 col-md-4 col-lg-4">
                         <article class="article article-style-c">
                             <div class="article-header">
                                 <div class="article-image">
-                                    <img src="{{ $photo->thumbnail_url }}" alt="{{ $photo->title }}" width="350" height="233">
+                                    <a href="#">
+                                        <img src="{{ $photo->thumbnail_url }}" alt="{{ $photo->title }}" width="350" height="233">
+                                    </a>
                                 </div>
                             </div>
                             <div class="article-details">
