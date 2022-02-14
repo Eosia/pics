@@ -21,9 +21,6 @@ class HomeController extends Controller
     public function __invoke(Request $request)
     {
 
-        $photo = Photo::find(37)->delete();
-
-
         //ne prend que les photos actives
         //$photos = Photo::with('album.user')->orderByDesc('created_at')->paginate();
 
