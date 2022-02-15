@@ -57,6 +57,8 @@ class User extends Authenticatable implements MustVerifyEmail
         'email_verified_at' => 'datetime',
     ];
 
+    protected $dates = ['email_verified_at'];
+
     public function albums() {
         return $this->hasMany(Album::class);
     }

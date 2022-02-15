@@ -32,6 +32,16 @@ Route::get('/dashboard', function () {
 // routes resources
 Route::resource('albums', AlbumController::class);
 
+// routes groupes middleware
+Route::middleware(['auth', 'verified'])->group(function() {
+    // authentifié et vérifié
+    /*
+    Route::get('user', function() {
+        return auth()->user()->email_verified_at;
+    });
+    */
+
+});
 
 // import dossier des routes d'authentification
 require __DIR__.'/auth.php';
