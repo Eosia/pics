@@ -11,6 +11,8 @@ class Album extends Model
 {
     use HasFactory, HasSlug;
 
+    protected $perPage = 9;
+
     public function getRouteKeyName()
     {
         return 'slug';
@@ -21,8 +23,9 @@ class Album extends Model
         return SlugOptions::create()
             ->generateSlugsFrom('title')
             ->saveSlugsTo('slug')
-            ->doNotGenerateSlugsOnCreate();
+            ->doNotGenerateSlugsOnUpdate();
     }
+
 
     public function user() {
         return $this->belongsTo(User::class);

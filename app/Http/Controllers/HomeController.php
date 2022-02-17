@@ -5,8 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\{
   Photo,
+    User,
 };
-use Cache;
+use Cache, Auth;
 
 class HomeController extends Controller
 {
