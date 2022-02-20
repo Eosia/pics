@@ -11,6 +11,8 @@ class Album extends Model
 {
     use HasFactory, HasSlug;
 
+    protected $guarded = ['categories', 'tags'];
+
     protected $perPage = 9;
 
     public function getRouteKeyName()

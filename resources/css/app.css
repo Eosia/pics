@@ -14,3 +14,7 @@
 .article-image a img {
     margin: 0 auto;
 }
+
+div.error {
+    color: #f55;
+}

@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Album;
 use Illuminate\Http\Request;
+use App\Http\Requests\AlbumRequest;
+use DB, Auth;
+use Illuminate\Validation\ValidationException;
 
 class AlbumController extends Controller
 {
@@ -40,6 +43,9 @@ class AlbumController extends Controller
     public function create()
     {
         //
+        $title=$description=$heading='Ajouter un nouvel album - '.config('app.name');
+        return view('album.create', compact('title', 'description', 'heading'));
+
     }
 
     /**
@@ -48,9 +54,24 @@ class AlbumController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(AlbumRequest $request)
     {
         //
+        DB::beginTransaction();
+
+        try{
+            $album = Auth::user()->albums()->create($request->validated());
+        }
+        catch(ValidationException $e) {
+            DB::rollback();
+            dd($e->getErrors());
+        }
+
+        DB::commit();
+
+        $success = 'Album ajouté.';
+        return back()->withSuccess($success);
+
     }
 
     /**

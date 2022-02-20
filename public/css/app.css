@@ -708,6 +708,9 @@ select {
 .-mt-px {
   margin-top: -1px;
 }
+.mb-3 {
+  margin-bottom: 0.75rem;
+}
 .mb-5 {
   margin-bottom: 1.25rem;
 }
@@ -1012,6 +1015,9 @@ select {
 .text-center {
   text-align: center;
 }
+.text-right {
+  text-align: right;
+}
 .font-sans {
   font-family: Nunito, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 }
@@ -1196,6 +1202,9 @@ select {
 }
 .article-image a img {
     margin: 0 auto;
+}
+div.error {
+    color: #f55;
 }
 .hover\:border-gray-300:hover {
   --tw-border-opacity: 1;

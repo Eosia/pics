@@ -23,9 +23,10 @@
             <div class="section-body">
 
                 <h2 class="section-title">{{ $heading }}</h2> &nbsp;
-                <a href="{{ route('albums.create') }}" class="btn btn-infos">
+                <a href="{{ route('albums.create') }}" class="btn btn-info mb-3">
                     Ajouter un album
                 </a>
+
                 <div class="row">
 
                     @forelse($albums as $album)
