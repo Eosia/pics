@@ -7,13 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 use Spatie\Sluggable\HasSlug;
 use Spatie\Sluggable\SlugOptions;
 
-class Album extends Model
+class Category extends Model
 {
     use HasFactory, HasSlug;
 
-    protected $guarded = ['categories', 'tags'];
-
-    protected $perPage = 9;
+    protected $guarded = [];
 
     public function getRouteKeyName()
     {
@@ -23,22 +21,14 @@ class Album extends Model
     public function getSlugOptions() : SlugOptions
     {
         return SlugOptions::create()
-            ->generateSlugsFrom('title')
+            ->generateSlugsFrom('name')
             ->saveSlugsTo('slug')
             ->doNotGenerateSlugsOnUpdate();
     }
 
-    public function categories() {
-        return $this->belongsToMany(Category::class)->withTimestamps();
-    }
 
-
-    public function user() {
-        return $this->belongsTo(User::class);
-    }
-
-    public function photos() {
-        return $this->hasMany(Photo::class);
+    public function albums() {
+        return $this->belongsToMany(Album::class)->withTimestamps();
     }
 
 }

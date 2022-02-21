@@ -29,6 +29,7 @@ class AlbumRequest extends FormRequest
             //
             'title' => ['required', 'max:191'],
             'description' => ['required'],
+            'categories' => ['required', 'max:191'],
         ];
     }
 }

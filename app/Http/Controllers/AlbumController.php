@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Album;
+use App\Models\{
+    Album, Category
+};
 use Illuminate\Http\Request;
 use App\Http\Requests\AlbumRequest;
 use DB, Auth;
 use Illuminate\Validation\ValidationException;
+
 
 class AlbumController extends Controller
 {
@@ -61,6 +64,18 @@ class AlbumController extends Controller
 
         try{
             $album = Auth::user()->albums()->create($request->validated());
+
+            $categories = explode(',', $request->categories);
+
+            $categories = collect($categories)->filter(function($value, $key){
+                return $value != ' ';
+            })->all();
+
+            foreach($categories as $cat){
+                $category = Category::firstOrCreate(['name' => trim($cat)]);
+                $album->categories()->attach($category->id);
+            }
+
         }
         catch(ValidationException $e) {
             DB::rollback();
