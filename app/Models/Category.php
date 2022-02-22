@@ -26,8 +26,7 @@ class Category extends Model
             ->doNotGenerateSlugsOnUpdate();
     }
 
-
-    public function albums() {
+    public function albums(){
         return $this->belongsToMany(Album::class)->withTimestamps();
     }
 
