@@ -86,7 +86,6 @@ class AlbumController extends Controller
                 $tag = Tag::firstOrCreate(['name' => trim($t)]);
                 $album->tags()->attach($tag->id);
             }
-
         }
         catch(ValidationException $e) {
             DB::rollback();

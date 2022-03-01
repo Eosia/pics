@@ -5474,27 +5474,173 @@ module.exports = {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var alpinejs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! alpinejs */ "./node_modules/alpinejs/dist/module.esm.js");
-/* harmony import */ var sweetalert2__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! sweetalert2 */ "./node_modules/sweetalert2/dist/sweetalert2.all.js");
-/* harmony import */ var sweetalert2__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(sweetalert2__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var sweetalert2__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! sweetalert2 */ "./node_modules/sweetalert2/dist/sweetalert2.all.js");
+/* harmony import */ var sweetalert2__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(sweetalert2__WEBPACK_IMPORTED_MODULE_0__);
 __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
 
+__webpack_require__(/*! alpinejs */ "./node_modules/alpinejs/dist/module.esm.js");
 
 
-window.Alpine = alpinejs__WEBPACK_IMPORTED_MODULE_0__["default"];
-alpinejs__WEBPACK_IMPORTED_MODULE_0__["default"].start();
 $(document).ready(function () {
   var ajaxForm = $('form.ajax-form');
-  $(ajaxForm).each(function () {
+  var progress = $('#progress');
+  var progressbar = $(progress).find('#progressbar');
+  var withFile = $('form.withFile');
+  var vote = $('a.vote');
+  var destroyForm = $('form.destroy');
+  $(destroyForm).each(function () {
     var _this = this;
 
     $(this).on('submit', function (e) {
       e.preventDefault();
-      var method = $(_this).find('input[name="_method"]').val() || $(_this).attr('method');
-      var data = $(_this).serialize();
+      var method = $(_this).find('input[name="_method"').val() || $(_this).attr('method');
+      var form = $(_this);
+      var url = $(_this).attr('action');
+      sweetalert2__WEBPACK_IMPORTED_MODULE_0___default().fire({
+        title: 'Supprimer?',
+        text: 'Veuillez confirmer la suppression',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Oui',
+        cancelButtonText: 'Annuler',
+        allowOutsideClick: false
+      }).then(function (result) {
+        if (result.value) {
+          $.ajax({
+            url: url,
+            type: method,
+            data: $(form).serialize(),
+            dataType: 'json',
+            success: function success(response) {
+              if (response.success) {
+                var redirect = response.redirect || null;
+                handleSuccess(response.success, redirect);
+              }
+            },
+            error: function error(xhr, status, err) {
+              handleErrors(xhr);
+            }
+          });
+        }
+      });
+    });
+  });
+  $(vote).each(function () {
+    var _this2 = this;
+
+    $(this).on('click', function (e) {
+      e.preventDefault();
+      $.ajax({
+        url: $(_this2).attr('href'),
+        type: 'GET',
+        dataType: 'json',
+        success: function success(response) {
+          if (response.success) {
+            var redirect = response.redirect || null;
+            handleSuccess(response.success, redirect);
+          }
+
+          if (response.error) {
+            sweetalert2__WEBPACK_IMPORTED_MODULE_0___default().fire({
+              icon: 'error',
+              title: 'Erreur !',
+              html: response.error
+            });
+          }
+        },
+        error: function error(xhr, status, err) {
+          handleErrors(xhr);
+        }
+      });
+    });
+  });
+  $(withFile).each(function () {
+    var _this3 = this;
+
+    $(this).on('submit', function (e) {
+      e.preventDefault();
+      var form = $(_this3);
+      var method = $(_this3).find('input[name="_method"').val() || $(_this3).attr('method');
+      var url = $(_this3).attr('action');
+      var data = new FormData(_this3);
+      var button = $(_this3).find('button');
+      $(button).prop('disabled', true);
+      var inputFile = $(_this3).find('input[type="file"]');
+      var file = $(inputFile).get(0).files;
+
+      if ($(file).length) {
+        var filename = $(inputFile).get(0).files[0].name;
+        data.append(filename, $(inputFile.get(0).files[0]));
+        $(progress).show();
+        var config = {
+          url: url,
+          method: method,
+          data: data,
+          responseType: 'json',
+          onUploadProgress: function onUploadProgress(e) {
+            var percentCompleted = Math.round(e.loaded * 100 / e.total);
+            console.log(percentCompleted);
+            $(progressbar).width(percentCompleted + '%').text(percentCompleted + '%');
+
+            if (percentCompleted == 100) {
+              $(progress).fadeOut().width('0%').text('0%');
+            }
+          }
+        };
+        axios(config).then(function (response) {
+          $(button).prop('disabled', false);
+          console.log(response.data);
+
+          if (response.data.success) {
+            var redirect = response.data.redirect || null;
+            handleSuccess(response.data.success, redirect);
+          }
+        })["catch"](function (error) {
+          $(button).prop('disabled', false);
+
+          if (error.response) {
+            if (error.response.status === 422 && error.response.data.errors) {
+              console.log(error.response.data.errors);
+              var errorString = '';
+              $.each(error.response.data.errors, function (key, value) {
+                errorString += '<p>' + value + '</p>';
+              });
+              sweetalert2__WEBPACK_IMPORTED_MODULE_0___default().fire({
+                icon: 'error',
+                title: 'Oops... 😕',
+                html: errorString
+              });
+              return false;
+            }
+
+            handleErrors(error.response);
+          } else if (error.request) {
+            console.log(error.request);
+          } else {
+            console.log('Error', error.message);
+          }
+
+          console.log(error.config);
+        });
+      } else {
+        sweetalert2__WEBPACK_IMPORTED_MODULE_0___default().fire({
+          icon: 'error',
+          title: 'Oup!',
+          text: 'Veuillez ajouter une image'
+        });
+      }
+    });
+  });
+  $(ajaxForm).each(function () {
+    var _this4 = this;
+
+    $(this).on('submit', function (e) {
+      e.preventDefault();
+      var method = $(_this4).find('input[name="_method"').val() || $(_this4).attr('method');
+      var data = $(_this4).serialize();
       $.ajax({
         type: method,
-        url: $(_this).attr('action'),
+        url: $(_this4).attr('action'),
         data: data,
         dataType: 'json',
         success: function success(response) {
@@ -5514,7 +5660,7 @@ $(document).ready(function () {
   });
 
   function handleSuccess(success, redirect) {
-    sweetalert2__WEBPACK_IMPORTED_MODULE_1___default().fire({
+    sweetalert2__WEBPACK_IMPORTED_MODULE_0___default().fire({
       icon: 'success',
       title: 'Ok',
       html: success,
@@ -5536,7 +5682,7 @@ $(document).ready(function () {
         $.each(xhr.responseJSON.errors, function (key, value) {
           errorString += '<p>' + value + '</p>';
         });
-        sweetalert2__WEBPACK_IMPORTED_MODULE_1___default().fire({
+        sweetalert2__WEBPACK_IMPORTED_MODULE_0___default().fire({
           icon: 'error',
           title: 'Erreur',
           html: errorString
@@ -5544,7 +5690,7 @@ $(document).ready(function () {
         break;
 
       case 404:
-        sweetalert2__WEBPACK_IMPORTED_MODULE_1___default().fire({
+        sweetalert2__WEBPACK_IMPORTED_MODULE_0___default().fire({
           icon: 'error',
           title: 'Oops...',
           text: 'Non trouvée.'
@@ -5552,7 +5698,7 @@ $(document).ready(function () {
         break;
 
       case 419:
-        sweetalert2__WEBPACK_IMPORTED_MODULE_1___default().fire({
+        sweetalert2__WEBPACK_IMPORTED_MODULE_0___default().fire({
           icon: 'error',
           title: 'Oops...',
           text: 'Jeton de sécurité invalide. Veuillez recharger la page.' //si on clique sur le bouton OK, on recharge pour mettre à jour la page avec le bon csrf token
@@ -5565,7 +5711,7 @@ $(document).ready(function () {
         break;
 
       default:
-        sweetalert2__WEBPACK_IMPORTED_MODULE_1___default().fire({
+        sweetalert2__WEBPACK_IMPORTED_MODULE_0___default().fire({
           icon: 'error',
           title: 'Erreur...',
           text: 'Erreur. Cliquez pour recharger la page.'

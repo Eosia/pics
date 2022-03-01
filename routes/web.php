@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\{
     AlbumController,
     HomeController,
+    PhotoController,
 };
 
 /*
@@ -34,7 +35,13 @@ Route::resource('albums', AlbumController::class);
 
 // routes groupes middleware
 Route::middleware(['auth', 'verified'])->group(function() {
+
+
     // authentifié et vérifié
+
+    Route::get('photos/create/{album}', [PhotoController::class, 'create'])->name('photos.create');
+    Route::post('photos/store/{album}', [PhotoController::class, 'store'])->name('photos.store');
+
     /*
     Route::get('user', function() {
         return auth()->user()->email_verified_at;
