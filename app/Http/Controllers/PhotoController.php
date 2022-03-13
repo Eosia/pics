@@ -5,7 +5,11 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\{ Photo, Album, User, Source, Tag};
 use App\Http\Requests\PhotoRequest;
+
+Use App\Jobs\ResizePhoto;
+
 use DB, Image, Storage, Str, Mail;
+
 
 class PhotoController extends Controller
 {
@@ -56,12 +60,17 @@ class PhotoController extends Controller
                     'height' => $originalHeight,
                 ]);
 
+                //resize de la photo
+                //ResizePhoto::dispatch($originalSource, $photo, $ext);
+                DB::afterCommit(fn()=>ResizePhoto::dispatch($originalSource, $photo, $ext));
+
+                /*
                 $thumbnailImage = Image::make(Storage::get($originalSource->path))->fit(350, 233, function($constraint) {
                     $constraint->aspectRatio();
                     $constraint->upsize();
                 })->encode($ext, 50);
 
-                $thumbnailPath = 'photos/'.$photo->album_id.'/thumbnails/'.$filename;
+                $thumbnailPath = 'photos/'.$photo->album_id.' /thumbnails/'.$filename;
                 Storage::put($thumbnailPath, $thumbnailImage);
 
                 $photo->thumbnail_path = $thumbnailPath;
@@ -96,6 +105,8 @@ class PhotoController extends Controller
                     $photo->save();
 
                 }
+
+                */
 
             }
         }

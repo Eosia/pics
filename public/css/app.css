@@ -714,6 +714,12 @@ select {
 .mt-6 {
   margin-top: 1.5rem;
 }
+.mb-5 {
+  margin-bottom: 1.25rem;
+}
+.mb-0 {
+  margin-bottom: 0px;
+}
 .block {
   display: block;
 }
@@ -1002,6 +1008,9 @@ select {
 }
 .pt-6 {
   padding-top: 1.5rem;
+}
+.pt-0 {
+  padding-top: 0px;
 }
 .text-center {
   text-align: center;
