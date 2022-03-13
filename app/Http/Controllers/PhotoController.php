@@ -63,8 +63,10 @@ class PhotoController extends Controller
 
                 $thumbnailPath = 'photos/'.$photo->album_id.'/thumbnails/'.$filename;
                 Storage::put($thumbnailPath, $thumbnailImage);
+
                 $photo->thumbnail_path = $thumbnailPath;
                 $photo->thumbnail_url = Storage::url($thumbnailPath);
+
                 $photo->save();
 
                 for($i = 2; $i <= 6; $i++) {
@@ -75,7 +77,26 @@ class PhotoController extends Controller
                         $constraint->aspectRatio();
                         $constraint->upsize();
                     })->encode($ext);
+
+                    $filename = Str::uuid().'.'.$ext;
+
+                    $path = 'photos/'.$photo->album_id.'/'.$filename;
+
+                    Storage::put($path, $img);
+
+                    $photo->sources()->create([
+                        'path' => $path,
+                        'url' => Storage::url($path),
+                        'size' => Storage::size($path),
+                        'width' => $width,
+                        'height' => $height,
+                    ]);
+
+                    $photo->active = true;
+                    $photo->save();
+
                 }
+
             }
         }
         catch(ValidationException $e) {
