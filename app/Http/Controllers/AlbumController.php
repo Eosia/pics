@@ -2,31 +2,27 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\{
-    Album, Category, Tag
-};
+use App\Models\{ Album, Category, Tag };
 use Illuminate\Http\Request;
 use App\Http\Requests\AlbumRequest;
 use DB, Auth;
-use Illuminate\Validation\ValidationException;
-
 
 class AlbumController extends Controller
 {
-
-    public function __construct(){
-        $this->middleware(['auth', 'verified'])->except('show');
-    }
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index() // liste des albums de l'utilisateur connecté
-    {
-        //
-        $albums = auth()->user()->albums()
-            ->with('photos', fn($query) => $query->withoutGlobalScope('active')->orderByDesc('created_at'))->orderByDesc('updated_at')->paginate();
+    public function __construct() {
+        $this->middleware(['auth', 'verified'])->except('show');
+    }
+
+    public function index() { // liste des albums de l'user connecté
+        //dd(auth()->user()->name);
+        $albums = auth()->user()->albums()->with('photos', fn($query) => $query->withoutGlobalScope('active')->orderByDesc('created_at'))->orderByDesc('updated_at')->paginate();
+
+        //dd($albums);
 
         $data = [
             'title' => $description = 'Mes albums',
@@ -34,8 +30,8 @@ class AlbumController extends Controller
             'albums' => $albums,
             'heading' => $description,
         ];
-        return view('album.index', $data);
 
+        return view('album.index', $data);
     }
 
     /**
@@ -45,10 +41,8 @@ class AlbumController extends Controller
      */
     public function create()
     {
-        //
-        $title=$description=$heading='Ajouter un nouvel album - '.config('app.name');
+        $title = $description = $heading = 'Ajouter un nouvel album - '.config('app.name');
         return view('album.create', compact('title', 'description', 'heading'));
-
     }
 
     /**
@@ -59,48 +53,44 @@ class AlbumController extends Controller
      */
     public function store(AlbumRequest $request)
     {
-        //
         DB::beginTransaction();
-
-        try{
+        try {
             $album = Auth::user()->albums()->create($request->validated());
-
-            $categories = explode(',', $request->categories);
-
+            //dd($request->categories);
+            $categories = explode(',',$request->categories);
             $categories = collect($categories)->filter(function($value, $key){
-                return $value != ' ';
+                return $value != '' && $value != ' ';
             })->all();
 
-            foreach($categories as $cat){
-                $category = Category::firstOrCreate(['name' => trim($cat)]);
+            //dd($categories);
+            foreach($categories as $cat) {
+                $category = Category::firstOrCreate(['name' => ucfirst(trim($cat))]);
                 $album->categories()->attach($category->id);
             }
 
-            $tags = explode(',', $request->tags);
-
+            $tags = explode(',',$request->tags);
             $tags = collect($tags)->filter(function($value, $key){
-                return $value != ' ';
+                return $value != '' && $value != ' ';
             })->all();
 
-            foreach($tags as $t){
-                $tag = Tag::firstOrCreate(['name' => trim($t)]);
+            //dd($tags);
+            foreach($tags as $t) {
+                $tag = Tag::firstOrCreate(['name' => ucfirst(trim($t))]);
                 $album->tags()->attach($tag->id);
             }
         }
         catch(ValidationException $e) {
-            DB::rollback();
+            DB::rollBack();
             dd($e->getErrors());
         }
 
         DB::commit();
 
-        $success = 'Album ajouté.';
         $redirect = route('photos.create', [$album->slug]);
-        return $request->ajax()
-            ? response()->json(['success' => $success, 'redirect' => $redirect])
-            : redirect($redirect)->withSuccess($success);
-
-
+        $success = 'Album ajouté';
+        return $request->ajax() ?
+            response()->json(['success' => $success, 'redirect' => $redirect]) :
+            redirect($redirect)->withSuccess($success);
     }
 
     /**

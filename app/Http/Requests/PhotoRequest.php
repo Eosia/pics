@@ -24,10 +24,9 @@ class PhotoRequest extends FormRequest
     public function rules()
     {
         return [
-            //
-            'title'=>['required','max:191'],
-            'photo'=>['required','file','image','mimes:jpeg,png','dimension:min_width=1920,min_height=1080'],
-            'tags'=>['required','max:191'],
+            'title' => ['required', 'max:191'],
+            'photo' => ['required', 'file', 'image', 'mimes:jpeg,jpg,png', 'dimensions:min_width=1920, min_height=1080'],
+            'tags' => ['required', 'max:191'],
         ];
     }
 }

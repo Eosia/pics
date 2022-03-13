@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\{
     AlbumController,
     HomeController,
-    PhotoController,
+    PhotoController
 };
 
 /*
@@ -22,9 +22,12 @@ use App\Http\Controllers\{
 // routes GET
 Route::get('/', HomeController::class)->name('home');
 
+
+
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
+
 
 
 // routes POST

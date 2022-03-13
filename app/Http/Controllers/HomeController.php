@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\{
   Photo,
-    User,
+    User
 };
 use Cache, Auth;
 
@@ -24,7 +24,7 @@ class HomeController extends Controller
 
         //ne prend que les photos actives
         //$photos = Photo::with('album.user')->orderByDesc('created_at')->paginate();
-
+        //Auth::login(User::first());
         // requete les photos et les garde en cache tant que pas mise à jour
         $currentPage = request()->query('page', 1);
         $photos = Cache::rememberForever('photos_'.$currentPage, function() {

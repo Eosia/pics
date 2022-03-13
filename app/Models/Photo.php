@@ -15,6 +15,8 @@ class Photo extends Model
 
     protected $perPage = 9;
 
+    protected $fillable = ['title', 'album_id'];
+
     //met à jour le cache lors de la création d'une nouvelle photo
     public static function boot()
     {
