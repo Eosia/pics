@@ -36,7 +36,8 @@
                                 <div class="article-header">
                                     <div class="article-image">
                                         <a href="{{ route('albums.show', [$album->slug]) }}">
-                                            <img src="{{ $album->photos[0]->thumbnail_url }}" alt="{{ $album->title }}" width="350" height="233">
+                                            <img src="{{ $album->photos[0]->thumbnail_url }}" alt="{{ $album->title }}"
+                                                 width="350" height="233">
                                         </a>
                                     </div>
                                 </div>
@@ -60,6 +61,36 @@
                                         <div class="article-user-details">
                                             <div class="text-job">
 
+                                                @if(Auth::user()->id === $album->user_id)
+
+                                                    <div class="destroy text-right">
+
+                                                        <a href="{{ route('photos.create', [$album->slug]) }}"><i
+                                                                class="fas fa-plus btn btn-info"
+                                                                style="font-size: 1.5rem;"></i></a>
+
+                                                        &nbsp;
+
+                                                        <a href="{{ route('albums.edit', [$album->slug]) }}"><i
+                                                                class="fas fa-edit btn btn-warning"
+                                                                style="font-size: 1.5rem;"></i></a>
+
+                                                        &nbsp;
+
+                                                        <form style="display: inline;"
+                                                              action="{{ route('albums.destroy', [$album->slug]) }}"
+                                                              method="post" class="destroy">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <button class="btn btn-danger" type="submit">
+                                                                <i class="far fa-trash-alt" style="color: #fff;"></i>
+                                                            </button>
+                                                        </form>
+
+                                                    </div>
+
+                                                @endif
+
                                             </div>
                                         </div>
                                     </div>
@@ -77,11 +108,11 @@
                 </div>
             </div>
 
-    </section>
+        </section>
 
-    <nav>
-        {!! $albums->links() !!}
-    </nav>
+        <nav>
+            {!! $albums->links() !!}
+        </nav>
 
 
     </div>

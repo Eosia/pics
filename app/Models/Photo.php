@@ -17,25 +17,6 @@ class Photo extends Model
 
     protected $fillable = ['title', 'album_id'];
 
-    //met à jour le cache lors de la création d'une nouvelle photo
-    public static function boot()
-    {
-        parent::boot();
-        static::created(function() {
-            Cache::flush();
-        });
-
-        parent::boot();
-        static::updated(function() {
-            Cache::flush();
-        });
-
-        parent::boot();
-        static::deleted(function() {
-            Cache::flush();
-        });
-    }
-
     protected static function booted()
     {
         static::addGlobalScope('active', function (Builder $builder) {
