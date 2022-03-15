@@ -13,13 +13,13 @@ class Photo extends Model
 {
     use HasFactory, HasSlug;
 
-    protected $perPage = 9;
-
     protected $fillable = ['title', 'album_id'];
+
+    protected $perPage = 9;
 
     protected static function booted()
     {
-        static::addGlobalScope('active', function (Builder $builder) {
+        static::addGlobalScope('active', function (Builder $builder){
             $builder->where('active', true);
         });
     }
@@ -29,12 +29,11 @@ class Photo extends Model
         return 'slug';
     }
 
-    public function getSlugOptions() : SlugOptions
-    {
+    public function getSlugOptions() : SlugOptions {
         return SlugOptions::create()
             ->generateSlugsFrom('title')
             ->saveSlugsTo('slug')
-            ->doNotGenerateSlugsOnCreate();
+            ->doNotGenerateSlugsOnUpdate();
     }
 
     public function album() {

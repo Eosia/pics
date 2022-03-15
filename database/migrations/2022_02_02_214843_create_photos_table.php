@@ -17,7 +17,7 @@ class CreatePhotosTable extends Migration
             $table->id();
             $table->foreignId('album_id')->constrained()->onDelete('cascade');
             $table->string('title');
-            $table->string('slug')->nullable();
+            $table->string('slug');
             $table->string('thumbnail_path')->nullable();
             $table->string('thumbnail_url')->nullable();
             $table->boolean('active')->nullable()->default(false);

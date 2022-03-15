@@ -23,11 +23,11 @@ use App\Http\Controllers\{
 Route::get('/', HomeController::class)->name('home');
 
 
-
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
-
+//route de vue d'une photo
+Route::get('photo/{photo}', [PhotoController::class, 'show'])->name('photos.show');
 
 
 // routes POST

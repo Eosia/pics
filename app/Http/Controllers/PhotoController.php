@@ -3,21 +3,22 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\{ Photo, Album, User, Source, Tag};
+use App\Models\{Photo, Album, User, Source, Tag};
 use App\Http\Requests\PhotoRequest;
 
-Use App\Jobs\ResizePhoto;
+use App\Jobs\ResizePhoto;
 
 use DB, Image, Storage, Str, Mail;
 
 
 class PhotoController extends Controller
 {
-    public function create(Album $album) { // Formulaire d'ajout de photo à l'album
+    public function create(Album $album)
+    { // Formulaire d'ajout de photo à l'album
         abort_if($album->user_id != auth()->id(), 403);
 
         $data = [
-            'title' => $description = 'Ajouter des photos à '.$album->title,
+            'title' => $description = 'Ajouter des photos à ' . $album->title,
             'description' => $description,
             'album' => $album,
             'heading' => $album->title,
@@ -26,31 +27,32 @@ class PhotoController extends Controller
         return view('photo.create', $data);
     }
 
-    public function store(PhotoRequest $request, Album $album) { // Enregistrement de la photo
+    public function store(PhotoRequest $request, Album $album)
+    { // Enregistrement de la photo
         abort_if($album->user_id != auth()->id(), 403);
 
         DB::beginTransaction();
         try {
             $photo = $album->photos()->create($request->validated());
 
-            $tags = explode(',',$request->tags);
-            $tags = collect($tags)->filter(function($value, $key){
+            $tags = explode(',', $request->tags);
+            $tags = collect($tags)->filter(function ($value, $key) {
                 return $value != '' && $value != ' ';
             })->all();
 
             //dd($tags);
-            foreach($tags as $t) {
+            foreach ($tags as $t) {
                 $tag = Tag::firstOrCreate(['name' => ucfirst(trim($t))]);
                 $photo->tags()->attach($tag->id);
             }
 
-            if($request->file('photo')->isValid()) {
+            if ($request->file('photo')->isValid()) {
                 $ext = $request->file('photo')->extension();
-                $filename = Str::uuid().'.'.$ext;
+                $filename = Str::uuid() . '.' . $ext;
 
-                $originalPath = $request->file('photo')->storeAs('photos/'.$photo->album_id, $filename);
-                $originalWidth = (int) Image::make($request->file('photo'))->width();
-                $originalHeight = (int) Image::make($request->file('photo'))->height();
+                $originalPath = $request->file('photo')->storeAs('photos/' . $photo->album_id, $filename);
+                $originalWidth = (int)Image::make($request->file('photo'))->width();
+                $originalHeight = (int)Image::make($request->file('photo'))->height();
 
                 $originalSource = $photo->sources()->create([
                     'path' => $originalPath,
@@ -62,7 +64,7 @@ class PhotoController extends Controller
 
                 //resize de la photo
                 //ResizePhoto::dispatch($originalSource, $photo, $ext);
-                DB::afterCommit(fn()=>ResizePhoto::dispatch($originalSource, $photo, $ext));
+                DB::afterCommit(fn() => ResizePhoto::dispatch($originalSource, $photo, $ext));
 
                 /*
                 $thumbnailImage = Image::make(Storage::get($originalSource->path))->fit(350, 233, function($constraint) {
@@ -109,8 +111,7 @@ class PhotoController extends Controller
                 */
 
             }
-        }
-        catch(ValidationException $e) {
+        } catch (ValidationException $e) {
             db::Rollback();
             dd($e->getErrors());
         }
@@ -121,4 +122,29 @@ class PhotoController extends Controller
         $redirect = route('photos.create', [$album->slug]);
         return redirect($redirect)->withSuccess($success);
     }
+
+    public function show(Photo $photo)
+    {
+
+        $photo->load('tags:name,slug',
+            'album.tags:name,slug', 'album.categories:name,slug', 'sources');
+
+        $tags = collect($photo->tags)->merge(collect($photo->album->tags))->unique();
+
+        $categories = $photo->album->categories;
+
+        $data = [
+            'title' => $photo->title.' - '.config('app.name'),
+            'description' => $photo->title . '. ' . $tags->implode('name', ', ') . ' '
+                . $categories->implode('name', ', '),
+            'photo' => $photo,
+            'tags' => $tags,
+            'categories' => $categories,
+            'heading'=>$photo->title,
+        ];
+        return view('photo.show', $data);
+    }
+
+
 }
+
