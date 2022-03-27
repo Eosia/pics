@@ -31,7 +31,7 @@ Route::get('photo/{photo}', [PhotoController::class, 'show'])->name('photos.show
 
 
 // routes POST
-
+Route::post('download', [PhotoController::class, 'download'])->name('photos.download')->middleware('auth', 'verified');
 
 // routes resources
 Route::resource('albums', AlbumController::class);

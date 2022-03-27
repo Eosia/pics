@@ -145,6 +145,10 @@ class PhotoController extends Controller
         return view('photo.show', $data);
     }
 
+    public function download() {
+
+    }
+
 
 }
 
