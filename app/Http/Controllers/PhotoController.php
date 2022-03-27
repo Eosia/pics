@@ -7,6 +7,7 @@ use App\Models\{Photo, Album, User, Source, Tag};
 use App\Http\Requests\PhotoRequest;
 
 use App\Jobs\ResizePhoto;
+use App\Notifications\PhotoDownloaded;
 
 use DB, Image, Storage, Str, Mail;
 
@@ -152,6 +153,10 @@ class PhotoController extends Controller
         $source = Source::findOrFail(request('source'));
         $source->load('photo.album.user');
         abort_if(! $source->photo->active, 403);
+
+        if(auth()->id() !== $source->photo->album->user_id){
+            $source->photo->album->user->notify(new PhotoDownloaded($source, $source->photo, auth()->user()));
+        }
 
         return Storage::download($source->path);
 
