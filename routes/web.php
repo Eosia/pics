@@ -21,7 +21,9 @@ use App\Http\Controllers\{
 
 // routes GET
 Route::get('/', HomeController::class)->name('home');
-
+//Route::get('user/{user}', [UserController::class, 'photos'])->name('user.photos');
+Route::get('tag/{tag}', [TagController::class, 'photos'])->name('tag.photos');
+Route::get('category/{category}', [CategoryController::class, 'photos'])->name('category.photos');
 
 Route::get('/dashboard', function () {
     return view('dashboard');

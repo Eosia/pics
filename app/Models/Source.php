@@ -11,6 +11,14 @@ class Source extends Model
 
     protected $guarded = [];
 
+    public function convertToMo(int $bytes) :string {
+        return round($this->size/1000 ** 2, 2).'Mo';
+    }
+
+    public function getDimensionsAttribute() {
+        return $this->width.'X'.$this->height;
+    }
+
     public function photo() {
         return $this->belongsTo(Photo::class);
     }

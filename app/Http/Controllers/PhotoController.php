@@ -146,6 +146,14 @@ class PhotoController extends Controller
     }
 
     public function download() {
+        request()->validate([
+            'source'=>['required', 'exists:sources,id'],
+        ]);
+        $source = Source::findOrFail(request('source'));
+        $source->load('photo.album.user');
+        abort_if(! $source->photo->active, 403);
+
+        return Storage::download($source->path);
 
     }
 

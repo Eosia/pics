@@ -56,7 +56,7 @@
                                 @endif
 
                                 <div>
-                                    <form action="#" method="post">
+                                    <form action="{{ route('photos.download') }}" method="post">
                                         @csrf
                                         <div class="form-group">
                                             <div class="input-group">
@@ -64,14 +64,8 @@
                                                     {{-- <option value=""></option> --}}
                                                     @foreach($photo->sources as $source)
                                                         <option value="{{ $source->id }}" @if(old('source') == $source->id)
-                                                        selected @endif> - {{ $source->width }} x {{ $source->height }}
-                                                            {{--
-                                                            {{ $source->dimensions }}
-                                                            --}}
-
-                                                            {{--
-                                                            {{ $source->convertToMo($source->size) }}
-                                                            --}}
+                                                        selected @endif>
+                                                            {{ $source->dimensions }} - {{ $source->convertToMo($source->size) }}
                                                         </option>
                                                     @endforeach
                                                 </select>
