@@ -8,6 +8,7 @@ use App\Http\Requests\PhotoRequest;
 
 use App\Jobs\ResizePhoto;
 use App\Notifications\PhotoDownloaded;
+use App\Mail\PhotoDownloaded as MailPhoto;
 
 use DB, Image, Storage, Str, Mail;
 
@@ -161,6 +162,8 @@ class PhotoController extends Controller
 
         if(auth()->id() !== $source->photo->album->user_id){
             $source->photo->album->user->notify(new PhotoDownloaded($source, $source->photo, auth()->user()));
+
+            Mail::to(auth()->user())->send(new MailPhoto($source, auth()->user()));
         }
 
         return Storage::download($source->path);
