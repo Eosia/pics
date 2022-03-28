@@ -146,6 +146,11 @@ class PhotoController extends Controller
         return view('photo.show', $data);
     }
 
+    public function readAll() {
+        auth()->user()->unreadNotifications->markAsRead();
+        return back();
+    }
+
     public function download() {
         request()->validate([
             'source'=>['required', 'exists:sources,id'],

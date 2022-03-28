@@ -30,7 +30,7 @@ Route::get('/dashboard', function () {
 })->middleware(['auth', 'verified'])->name('dashboard');
 //route de vue d'une photo
 Route::get('photo/{photo}', [PhotoController::class, 'show'])->name('photos.show');
-
+Route::get('read-all', [PhotoController::class, 'readAll'])->name('notifications.read')->middleware('auth', 'verified');
 
 // routes POST
 Route::post('download', [PhotoController::class, 'download'])->name('photos.download')->middleware('auth', 'verified');
