@@ -49,6 +49,9 @@
                                     <div class="article-user-details">
                                         <div class="user-detail-name">
                                             <a href="#">{{ $photo->album->user->name }}</a>
+                                           {{--
+                                            - {{ $photo->album->user->photos->count() }} {{ Str::plural('photo', $photo->album->user->photos->count()) }}
+                                            --}}
                                         </div>
                                         <div class="text-job">
                                             <a href="">
