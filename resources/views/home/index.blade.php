@@ -40,7 +40,7 @@
                                     <h2>
                                         <a href="{{ route('photos.show', [$photo->slug]) }}">
                                             {{ $photo->title }}
-                                        </a>
+                                         </a>
                                     </h2>
                                 </div>
 
