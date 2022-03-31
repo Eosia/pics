@@ -44,6 +44,10 @@ class Photo extends Model
         return $this->hasMany(Source::class);
     }
 
+    public function votes() {
+        return $this->hasMany(Vote::class);
+    }
+
     public function tags()
     {
         return $this->morphToMany(Tag::class, 'taggable')->withTimestamps();

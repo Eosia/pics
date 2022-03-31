@@ -31,6 +31,8 @@ Route::get('/dashboard', function () {
 //route de vue d'une photo
 Route::get('photo/{photo}', [PhotoController::class, 'show'])->name('photos.show');
 Route::get('read-all', [PhotoController::class, 'readAll'])->name('notifications.read')->middleware('auth', 'verified');
+//route pour voter pour une photo
+Route::get('vote/{photo}/{vote}/{token}', [PhotoController::class, 'vote'])->name('photo.vote');
 
 // routes POST
 Route::post('download', [PhotoController::class, 'download'])->name('photos.download')->middleware('auth', 'verified');

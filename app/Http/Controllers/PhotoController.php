@@ -154,6 +154,39 @@ class PhotoController extends Controller
         return back();
     }
 
+    public function vote(Photo $photo, string $vote, string $token)
+    {
+        abort_if($token !== session()->token(), 403);
+
+        abort_unless(in_array($vote, ['like', 'dislike']), 403);
+
+        $photo->load('votes');
+
+        if($photo->votes->where('session_token', session()->token())->count()){
+            $error = 'Vous avez déja voté.';
+            return request()->ajax()
+                ? response()->json(['error'=>$error])
+                : back()->withError($error);
+        }
+
+        $like = $vote == 'like';
+        $dislike = $vote == 'dislike';
+
+        $success = $like ? 'Vous aimez cette photo.' : 'Vous n\'aimez pas cette photo.';
+
+        $vote = $photo->votes()->create([
+            'like' => $like,
+            'dislike' => $dislike,
+            'session_token' => session()->token(),
+        ]);
+
+        $redirect = route('photos.show', [$photo->slug]);
+
+        return request()->ajax()
+            ? response()->json(['success' => $success, 'redirect' => $redirect])
+            : back()->withSuccess($success);
+    }
+
     public function download() {
         request()->validate([
             'source'=>['required', 'exists:sources,id'],
