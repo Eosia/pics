@@ -133,6 +133,12 @@ class PhotoController extends Controller
         $photo->load('tags:name,slug',
             'album.tags:name,slug', 'album.categories:name,slug', 'sources');
 
+        $photo->loadCount(['votes as count_likes' => function($query){
+            return $query->where('like', true);
+        }, 'votes as count_dislikes' => function($query){
+            return $query->where('dislike', true);
+        }]);
+
         $tags = collect($photo->tags)->merge(collect($photo->album->tags))->unique();
 
         $categories = $photo->album->categories;
