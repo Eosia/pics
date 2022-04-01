@@ -28,5 +28,6 @@ class ObserverServiceProvider extends ServiceProvider
     {
         //
         Photo::observe(PhotoObserver::class);
+        Vote::observe(VoteObserver::class);
     }
 }
