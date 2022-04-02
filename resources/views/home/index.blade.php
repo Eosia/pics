@@ -9,8 +9,9 @@
 
             <div class="section-header">
                 <h1>{{ $heading }}</h1>
-
             <div class="section-body">
+
+            @include('includes.sort')
 
                 <h2 class="section-title">{{ $heading }}</h2>
 
