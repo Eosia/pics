@@ -155,7 +155,8 @@ $(document).ready(function(){
                     icon: 'error',
                     title: 'Oup!',
                     text: 'Veuillez ajouter une image',
-                })
+                });
+                $(button).prop('disabled', false);
             }
         })
     })
