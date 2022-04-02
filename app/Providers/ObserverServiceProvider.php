@@ -5,7 +5,10 @@ namespace App\Providers;
 use Illuminate\Support\ServiceProvider;
 
 use App\Models\Photo;
+use App\Models\Vote;
+
 Use App\Observers\PhotoObserver;
+use App\Observers\VoteObserver;
 
 class ObserverServiceProvider extends ServiceProvider
 {

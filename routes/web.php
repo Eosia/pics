@@ -49,6 +49,9 @@ Route::middleware(['auth', 'verified'])->group(function() {
     Route::get('photos/create/{album}', [PhotoController::class, 'create'])->name('photos.create');
     Route::post('photos/store/{album}', [PhotoController::class, 'store'])->name('photos.store');
 
+    // suppresion de la photo
+    Route::delete('delete-photo/{photo}', [PhotoController::class, 'destroy'])->name('photos.destroy');
+
     /*
     Route::get('user', function() {
         return auth()->user()->email_verified_at;
