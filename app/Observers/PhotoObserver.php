@@ -3,7 +3,6 @@
 namespace App\Observers;
 
 use App\Models\Photo;
-
 use Cache;
 
 class PhotoObserver

@@ -44,6 +44,10 @@ class Photo extends Model
         return $this->hasMany(Source::class);
     }
 
+    public function downloads() {
+        return $this->hasMany(Download::class);
+    }
+
     public function votes() {
         return $this->hasMany(Vote::class);
     }
