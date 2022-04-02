@@ -15,7 +15,7 @@
             </div>
 
             <div class="section-body">
-                <h2 class="section-title">{{ $heading }} - Postée par <a href="#">{{ $photo->album->user->name }}</a> -
+                <h2 class="section-title">{{ $heading }} - Postée par <a href="{{ route('user.photos', [$photo->album->user->slug ]) }}">{{ $photo->album->user->name }}</a> -
                     Tags:
                     @foreach($tags as $tag)
                         <a href="{{ route('tag.photos', [$tag->slug]) }}">{{ strtolower($tag->name) }}</a>
