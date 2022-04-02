@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\{ Album, Category, Tag };
 use Illuminate\Http\Request;
 use App\Http\Requests\AlbumRequest;
-use DB, Auth;
+use DB, Auth, Storage, Cache;
 
 class AlbumController extends Controller
 {
@@ -135,6 +135,29 @@ class AlbumController extends Controller
      */
     public function destroy(Album $album)
     {
-        //
+        abort_if(auth()->id() !== $album->user_id, 403);
+
+        DB::beginTransaction();
+
+        try{
+            DB::afterCommit(function() use ($album){
+                Storage::deleteDirectory('photos/'.$album->id);
+                Cache::flush();
+            });
+
+            $album->delete();
+        }
+        catch(ValidationException $e){
+            DB::rollBack();
+            dd($e->getErrors());
+        }
+
+        DB::commit();
+
+        $success = 'Album supprimé.';
+        $redirect = route('albums.index');
+        return request()->ajax()
+            ? response()->json(['success' => $success, 'redirect' => $redirect])
+            : redirect($redirect)->withSuccess($success);
     }
 }
