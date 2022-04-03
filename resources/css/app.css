@@ -18,3 +18,7 @@
 div.error {
     color: #f55;
 }
+
+html {
+    overflow-x: hidden !important;
+}
