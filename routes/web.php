@@ -7,7 +7,8 @@ use App\Http\Controllers\{
     PhotoController,
     UserController,
     TagController,
-    CategoryController
+    CategoryController,
+    SearchController
 };
 
 /*
@@ -27,6 +28,7 @@ Route::get('/', HomeController::class)->name('home');
 Route::get('user/{user}', [UserController::class, 'photos'])->name('user.photos');
 Route::get('tag/{tag}', [TagController::class, 'photos'])->name('tag.photos');
 Route::get('category/{category}', [CategoryController::class, 'photos'])->name('category.photos');
+Route::get('q', [SearchController::class, 'search'])->name('search');
 
 Route::get('/dashboard', function () {
     return view('dashboard');
