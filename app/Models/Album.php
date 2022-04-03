@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+
 use Spatie\Sluggable\HasSlug;
 use Spatie\Sluggable\SlugOptions;
 
@@ -28,12 +29,11 @@ class Album extends Model
             ->doNotGenerateSlugsOnUpdate();
     }
 
-    public function categories() {
+    public function categories(){
         return $this->belongsToMany(Category::class)->withTimestamps();
     }
 
-
-    public function user() {
+    public function user(){
         return $this->belongsTo(User::class);
     }
 
@@ -45,6 +45,4 @@ class Album extends Model
     {
         return $this->morphToMany(Tag::class, 'taggable')->withTimestamps();
     }
-
-
 }
