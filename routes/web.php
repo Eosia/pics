@@ -6,7 +6,8 @@ use App\Http\Controllers\{
     HomeController,
     PhotoController,
     UserController,
-    TagController
+    TagController,
+    CategoryController
 };
 
 /*
