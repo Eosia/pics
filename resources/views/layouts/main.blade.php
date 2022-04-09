@@ -50,7 +50,8 @@
 
                 <div class="search-element">
 
-                    <input value="{{ request()->query('search', '') }}" class="form-control" name="search" type="search" placeholder="Rechercher" aria-label="Search" data-width="250">
+                    <input value="{{ request()->query('search', '') }}" class="form-control" name="search" type="search"
+                           placeholder="Rechercher" aria-label="Search" data-width="250">
 
                     <button class="btn" type="submit"><i class="fas fa-search"></i></button>
 
